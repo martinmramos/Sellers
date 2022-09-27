@@ -1,9 +1,12 @@
-package com.example.sellers.controllers;
+package com.example.sellers.controllers.JSONClients;
 
-import javax.validation.constraints.*;
+import com.example.sellers.domain.Client;
 
-public class SellerUpdate {
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
+public class ClientUpdate{
     @NotNull(message = "Name is null")
     @NotBlank(message = "Name is empty")
     private String name;
@@ -13,14 +16,13 @@ public class SellerUpdate {
     @Digits(message = "Phone invalid", integer = 9, fraction = 0)
     private int phone;
 
-    public SellerUpdate(String name, String address, int phone) {
+    public ClientUpdate(String name, String address, int phone) {
         this.name = name;
         this.address = address;
         this.phone = phone;
     }
 
-    public SellerUpdate(){
-
+    public ClientUpdate() {
     }
 
     public String getName() {
@@ -45,5 +47,9 @@ public class SellerUpdate {
 
     public void setPhone(int phone) {
         this.phone = phone;
+    }
+
+    public Client toDomain(String dni){
+        return new Client(this.getName(), this.getAddress(), dni, this.getPhone());
     }
 }

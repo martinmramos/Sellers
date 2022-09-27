@@ -1,8 +1,10 @@
-package com.example.sellers.controllers;
+package com.example.sellers.controllers.JSONSellers;
+
+import com.example.sellers.domain.Seller;
 
 import javax.validation.constraints.*;
 
-public class SellerInput {
+public class SellerUpdate {
 
     @NotNull(message = "Name is null")
     @NotBlank(message = "Name is empty")
@@ -10,20 +12,16 @@ public class SellerInput {
     @NotNull(message = "Address is null")
     @NotBlank(message = "Address is empty")
     private String address;
-    @NotNull(message = "DNI is null")
-    @NotBlank(message = "DNI is empty")
-    private String dni;
     @Digits(message = "Phone invalid", integer = 9, fraction = 0)
     private int phone;
 
-    public SellerInput(String name, String address, String dni, int phone) {
+    public SellerUpdate(String name, String address, int phone) {
         this.name = name;
         this.address = address;
-        this.dni = dni;
         this.phone = phone;
     }
 
-    public SellerInput(){
+    public SellerUpdate(){
 
     }
 
@@ -43,19 +41,15 @@ public class SellerInput {
         this.address = address;
     }
 
-    public String getDni() {
-        return dni;
-    }
-
-    public void setDni(String dni) {
-        this.dni = dni;
-    }
-
     public int getPhone() {
         return phone;
     }
 
     public void setPhone(int phone) {
         this.phone = phone;
+    }
+
+    public Seller toDomain(String dni){
+        return new Seller(this.getName(), this.getAddress(), dni, this.getPhone());
     }
 }
