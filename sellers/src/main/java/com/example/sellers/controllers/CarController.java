@@ -1,8 +1,8 @@
 package com.example.sellers.controllers;
 
-import com.example.sellers.controllers.JSONCars.CarInput;
-import com.example.sellers.controllers.JSONCars.CarOutput;
-import com.example.sellers.controllers.JSONCars.CarUpdate;
+import com.example.sellers.controllers.DTO_DataTransferObject.CarInput;
+import com.example.sellers.controllers.DTO_DataTransferObject.CarOutput;
+import com.example.sellers.controllers.DTO_DataTransferObject.CarUpdate;
 import com.example.sellers.domain.Car;
 import com.example.sellers.domain.Concessionaire;
 import com.example.sellers.domain.personalExceptions.ExceptionInvalidParameter;

@@ -1,10 +1,10 @@
-package com.example.sellers.controllers.JSONSellers;
+package com.example.sellers.controllers.DTO_DataTransferObject;
 
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-public class SellerOutput {
+public class ClientOutput {
 
     @NotNull(message = "Attribute is null.")
     @NotBlank(message = "Attribute is empty.")
@@ -12,13 +12,13 @@ public class SellerOutput {
     @Digits(message = "Phone invalid", integer = 9, fraction = 0)
     private int phone;
 
-    public SellerOutput(String name, String dni, int phone) {
+    public ClientOutput(String name, String dni, int phone) {
         this.name = name;
         this.dni = dni;
         this.phone = phone;
     }
 
-    public SellerOutput() {
+    public ClientOutput() {
     }
 
     public String getName() {
@@ -32,5 +32,4 @@ public class SellerOutput {
     public int getPhone() {
         return phone;
     }
-
 }

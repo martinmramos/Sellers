@@ -1,8 +1,8 @@
 package com.example.sellers.controllers;
 
-import com.example.sellers.controllers.JSONSellers.SellerInput;
-import com.example.sellers.controllers.JSONSellers.SellerOutput;
-import com.example.sellers.controllers.JSONSellers.SellerUpdate;
+import com.example.sellers.controllers.DTO_DataTransferObject.SellerInput;
+import com.example.sellers.controllers.DTO_DataTransferObject.SellerOutput;
+import com.example.sellers.controllers.DTO_DataTransferObject.SellerUpdate;
 import com.example.sellers.domain.Concessionaire;
 import com.example.sellers.domain.personalExceptions.ExceptionInvalidParameter;
 import com.example.sellers.domain.Seller;

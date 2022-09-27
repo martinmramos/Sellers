@@ -1,4 +1,4 @@
-package com.example.sellers.controllers.JSONSellers;
+package com.example.sellers.controllers.DTO_DataTransferObject;
 
 import com.example.sellers.domain.Seller;
 
