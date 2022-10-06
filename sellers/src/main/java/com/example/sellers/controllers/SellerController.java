@@ -4,14 +4,16 @@ import com.example.sellers.controllers.DTO_DataTransferObject.SellerInput;
 import com.example.sellers.controllers.DTO_DataTransferObject.SellerOutput;
 import com.example.sellers.controllers.DTO_DataTransferObject.SellerUpdate;
 import com.example.sellers.domain.Concessionaire;
-import com.example.sellers.domain.personalExceptions.ExceptionInvalidParameter;
 import com.example.sellers.domain.Seller;
+import com.example.sellers.domain.personalExceptions.SellerExistsException;
+import com.example.sellers.domain.personalExceptions.SellerNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -23,19 +25,17 @@ public class SellerController {
         if (Concessionaire.getListSellers().isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        List<SellerOutput> outputList = new ArrayList<>();
-        for (Seller seller : Concessionaire.getListSellers().values()) {
-            outputList.add(new SellerOutput(seller.getName(), seller.getDni(), seller.getPhone()));
-        }
-        return ResponseEntity.ok(outputList);
+        return ResponseEntity.ok(getDataSellers(Concessionaire.getListSellers()));
     }
 
     @PostMapping("/sellers")
     public ResponseEntity<String> addSeller(@Valid @RequestBody SellerInput seller) {
         try {
             Concessionaire.addSeller(seller.toDomain());
-        } catch (ExceptionInvalidParameter e) {
+        } catch (SellerExistsException e) {
             return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED).build();
+        } catch (Exception e1) {
+            return ResponseEntity.badRequest().build();
         }
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
@@ -44,8 +44,10 @@ public class SellerController {
     public ResponseEntity<String> updateSeller(@PathVariable String dni, @Valid @RequestBody SellerUpdate seller) {
         try {
             Concessionaire.updateSeller(seller.toDomain(dni));
-        } catch (ExceptionInvalidParameter e) {
+        } catch (SellerNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
+        } catch (Exception e1) {
+            return ResponseEntity.badRequest().build();
         }
         return ResponseEntity.accepted().build();
     }
@@ -54,10 +56,20 @@ public class SellerController {
     public ResponseEntity<String> deleteSeller(@PathVariable String dni) {
         try {
             Concessionaire.deleteSeller(dni);
-        } catch (ExceptionInvalidParameter e) {
+        } catch (SellerNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build();
+        } catch (Exception e1) {
+            return ResponseEntity.badRequest().build();
         }
         return ResponseEntity.accepted().build();
+    }
+
+    public List<SellerOutput> getDataSellers(HashMap<String, Seller> listSellers) {
+        List<SellerOutput> outputList = new ArrayList<>();
+        for (Seller seller : listSellers.values()) {
+            outputList.add(SellerOutput.fromDomain(seller));
+        }
+        return outputList;
     }
 }
 

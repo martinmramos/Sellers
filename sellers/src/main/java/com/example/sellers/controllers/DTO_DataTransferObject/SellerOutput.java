@@ -1,5 +1,7 @@
 package com.example.sellers.controllers.DTO_DataTransferObject;
 
+import com.example.sellers.domain.Seller;
+
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -31,6 +33,10 @@ public class SellerOutput {
 
     public int getPhone() {
         return phone;
+    }
+
+    public static SellerOutput fromDomain(Seller seller) {
+        return new SellerOutput(seller.getName(), seller.getDni(), seller.getPhone());
     }
 
 }

@@ -1,13 +1,20 @@
 package com.example.sellers.domain;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+@Entity(name = "cars")
 public class Car {
 
     @NotNull(message = "Attribute is null.")
     @NotBlank(message = "Attibute is empty.")
-    private String brand, model, numPlate;
+    private String brand, model;
+    @NotNull(message = "Attribute is null.")
+    @NotBlank(message = "Attibute is empty.")
+    @Id
+    private String numPlate;
     private CarStatus status;
 
     public Car(String brand, String model, String numPlate) {
@@ -18,6 +25,7 @@ public class Car {
     }
 
     public Car() {
+        this.status = CarStatus.onSale;
     }
 
     public String getBrand() {

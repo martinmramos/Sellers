@@ -1,8 +1,7 @@
 package com.example.sellers.domain;
 
 
-import com.example.sellers.domain.personalExceptions.ExceptionInvalidParameter;
-import com.example.sellers.domain.personalExceptions.StatusIncorrectException;
+import com.example.sellers.domain.personalExceptions.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,57 +29,57 @@ public class Concessionaire {
         return listCars;
     }
 
-    public static void addSeller(Seller seller) throws ExceptionInvalidParameter {
-        if (listSellers.containsKey(seller.getDni())) throw new ExceptionInvalidParameter("DNI ya existente");
+    public static void addSeller(Seller seller) throws SellerExistsException {
+        if (listSellers.containsKey(seller.getDni())) throw new SellerExistsException("DNI ya existente");
         listSellers.put(seller.getDni(), seller);
     }
 
-    public static void deleteSeller(String dni) throws ExceptionInvalidParameter {
-        if (!listSellers.containsKey(dni)) throw new ExceptionInvalidParameter("No existe el vendedor introducido.");
+    public static void deleteSeller(String dni) throws SellerNotFoundException {
+        if (!listSellers.containsKey(dni)) throw new SellerNotFoundException("No existe el vendedor introducido.");
         listSellers.remove(dni);
     }
 
-    public static void updateSeller(Seller seller) throws ExceptionInvalidParameter {
+    public static void updateSeller(Seller seller) throws SellerNotFoundException {
         if (!listSellers.containsKey(seller.getDni()))
-            throw new ExceptionInvalidParameter("No existe el vendedor introducido.");
+            throw new SellerNotFoundException("No existe el vendedor introducido.");
         listSellers.put(seller.getDni(), seller);
     }
 
-    public static void addClient(Client client) throws ExceptionInvalidParameter {
-        if (listClients.containsKey(client.getDni())) throw new ExceptionInvalidParameter("DNI ya existente");
+    public static void addClient(Client client) throws ClientExistsException {
+        if (listClients.containsKey(client.getDni())) throw new ClientExistsException("DNI ya existente");
         listClients.put(client.getDni(), client);
     }
 
-    public static void deleteClient(String dni) throws ExceptionInvalidParameter {
-        if (!listClients.containsKey(dni)) throw new ExceptionInvalidParameter("No existe el vendedor introducido.");
+    public static void deleteClient(String dni) throws ClientNotFoundException {
+        if (!listClients.containsKey(dni)) throw new ClientNotFoundException("No existe el vendedor introducido.");
         listClients.remove(dni);
     }
 
-    public static void updateClient(Client client) throws ExceptionInvalidParameter {
+    public static void updateClient(Client client) throws ClientNotFoundException {
         if (!listClients.containsKey(client.getDni()))
-            throw new ExceptionInvalidParameter("No existe el cliente introducido.");
+            throw new ClientNotFoundException("No existe el cliente introducido.");
         listClients.put(client.getDni(), client);
     }
 
-    public static void addCar(Car car) throws ExceptionInvalidParameter {
-        if (listCars.containsKey(car.getNumPlate())) throw new ExceptionInvalidParameter("Matricula ya existente");
+    public static void addCar(Car car) throws CarExistsException {
+        if (listCars.containsKey(car.getNumPlate())) throw new CarExistsException("Matricula ya existente");
         listCars.put(car.getNumPlate(), car);
     }
 
-    public static void deleteCar(String numPlate) throws ExceptionInvalidParameter {
-        if (!listCars.containsKey(numPlate)) throw new ExceptionInvalidParameter("No existe el coche introducido.");
+    public static void deleteCar(String numPlate) throws CarNotFoundException {
+        if (!listCars.containsKey(numPlate)) throw new CarNotFoundException("No existe el coche introducido.");
         listCars.remove(numPlate);
     }
 
-    public static void updateCar(Car car) throws ExceptionInvalidParameter {
+    public static void updateCar(Car car) throws CarNotFoundException {
         if (!listCars.containsKey(car.getNumPlate()))
-            throw new ExceptionInvalidParameter("No existe el coche introducido.");
+            throw new CarNotFoundException("No existe el coche introducido.");
         listCars.put(car.getNumPlate(), car);
     }
 
-    public static void bookCar(String dni, String numPlate) throws ExceptionInvalidParameter, StatusIncorrectException {
-        if (!listCars.containsKey(numPlate)) throw new ExceptionInvalidParameter("El coche no existe");
-        if (!listClients.containsKey(dni)) throw new ExceptionInvalidParameter("El cliente no existe");
+    public static void bookCar(String dni, String numPlate) throws CarNotFoundException, ClientNotFoundException, StatusIncorrectException {
+        if (!listCars.containsKey(numPlate)) throw new CarNotFoundException("El coche no existe");
+        if (!listClients.containsKey(dni)) throw new ClientNotFoundException("El cliente no existe");
         Client client = listClients.get(dni);
         Car car = listCars.get(numPlate);
         if (car.getStatus() != CarStatus.onSale) throw new StatusIncorrectException();
@@ -88,12 +87,12 @@ public class Concessionaire {
         client.getListBookCars().put(car.getNumPlate(), car);
     }
 
-    public static void deleteBookCar(String dni, String numPlate) throws ExceptionInvalidParameter, StatusIncorrectException {
-        if (!listCars.containsKey(numPlate)) throw new ExceptionInvalidParameter("El coche no existe");
-        if (!listClients.containsKey(dni)) throw new ExceptionInvalidParameter("El cliente no existe");
+    public static void deleteBookCar(String dni, String numPlate) throws CarNotFoundException, ClientNotFoundException, StatusIncorrectException, BookingNotFoundException {
+        if (!listCars.containsKey(numPlate)) throw new CarNotFoundException("El coche no existe");
+        if (!listClients.containsKey(dni)) throw new ClientNotFoundException("El cliente no existe");
         Client client = listClients.get(dni);
         Car car = listCars.get(numPlate);
-        if (client.getListBookCars().isEmpty()) throw new ExceptionInvalidParameter("No hay coches reservados");
+        if (client.getListBookCars().isEmpty()) throw new BookingNotFoundException("No hay coches reservados");
         if (!client.getListBookCars().containsKey(numPlate)) throw new StatusIncorrectException();
         car.setStatus(CarStatus.onSale);
         client.getListBookCars().remove(numPlate);

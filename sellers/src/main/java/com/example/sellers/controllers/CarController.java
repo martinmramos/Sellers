@@ -5,7 +5,7 @@ import com.example.sellers.controllers.DTO_DataTransferObject.CarOutput;
 import com.example.sellers.controllers.DTO_DataTransferObject.CarUpdate;
 import com.example.sellers.domain.Car;
 import com.example.sellers.domain.Concessionaire;
-import com.example.sellers.domain.personalExceptions.ExceptionInvalidParameter;
+import com.example.sellers.domain.personalExceptions.CarNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,11 +30,11 @@ public class CarController {
     }
 
     @PostMapping("/cars")
-    public ResponseEntity<String> addCar(@Valid @RequestBody CarInput car) {
+    public ResponseEntity<String> addCar(@RequestBody CarInput car) {
         try {
             Concessionaire.addCar(car.toDomain());
-        } catch (ExceptionInvalidParameter e) {
-            return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED).build();
+        } catch (Exception e1) {
+            return ResponseEntity.badRequest().build();
         }
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
@@ -43,8 +43,10 @@ public class CarController {
     public ResponseEntity<String> updateCar(@PathVariable String numPlate, @Valid @RequestBody CarUpdate car) {
         try {
             Concessionaire.updateCar(car.toDomain(numPlate));
-        } catch (ExceptionInvalidParameter e) {
+        } catch (CarNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
+        } catch (Exception e1) {
+            return ResponseEntity.badRequest().build();
         }
         return ResponseEntity.accepted().build();
     }
@@ -53,8 +55,10 @@ public class CarController {
     public ResponseEntity<String> deleteCar(@PathVariable String numPlate) {
         try {
             Concessionaire.deleteCar(numPlate);
-        } catch (ExceptionInvalidParameter e) {
+        } catch (CarNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build();
+        } catch (Exception e1) {
+            return ResponseEntity.badRequest().build();
         }
         return ResponseEntity.accepted().build();
     }
